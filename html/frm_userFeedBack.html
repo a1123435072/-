@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no" />
+		<title>用户反馈</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+		<style>
+			.mui-btn-danger {
+				background-color: #3087cf;
+				border-color: #3087cf;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<!--<h5>您的反馈意见：</h5>-->
+				<div class="mui-input-row" style="margin-top: 10px;">
+					<textarea id="commentTxt" rows="5" placeholder="请输入反馈，帮我们不断改进" style="margin-bottom: 0px;"></textarea>
+				</div>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>手机号：</label>
+						<input id="cellNum" type="text" class="mui-input-clear" placeholder="方便联系您">
+					</div>
+				</form>
+				<h5 id="deviceType">设备：</h5>
+				<h5 id="osVersion">系统版本：</h5>
+				<!--<h5 id="jiupaiVersion">九派版本：</h5>-->
+				<h5 id="netType">当前网络：</h5>
+				<div class="mui-button-row" style="margin-top: 10px;text-align: right;">
+					<button type="button" class="mui-btn mui-btn-danger" onclick="toComit();">
+						提交
+					</button>
+					&nbsp;&nbsp;
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/jquery.min.js"></script>
+		<script type="text/javascript" src="../script/funcTools.js"></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script type="text/javascript">
+			function toComit() {
+				var commentTxt = $("#commentTxt").val(), cellNum = $("#cellNum").val();
+				if ("" == commentTxt || null == commentTxt) {
+					api.toast({
+						msg : '请填写反馈意见',
+						duration : 1000,
+						location : 'middle'
+					});
+					return;
+				}
+				if ("" == cellNum || null == cellNum) {
+					api.toast({
+						msg : '请填写手机号',
+						duration : 1000,
+						location : 'middle'
+					});
+					return;
+				} else if (!validFuncs.checkCellPhone(cellNum)) {
+					return;
+				}
+				api.showProgress({
+					title : '处理中...',
+					modal : false
+				});
+				var actionUrl = ajaxAgent.serverAction + '/app/userFeedback/add';
+				api.ajax({
+					url : actionUrl,
+					method : 'post',
+					timeout : 30,
+					dataType : 'json',
+					returnAll : false,
+					data : {
+						values : {
+							m : 'content',
+							c : 'wap',
+							a : 'retadvice',
+							content : commentTxt,
+							phone : cellNum
+						}
+					}
+				}, function(ret, err) {
+					if (ret) {
+						api.hideProgress();
+						if ('1' == ret.result) {
+							api.alert({
+								msg : '提交成功'
+							});
+							api.closeWin();
+						} else {
+							api.alert({
+								msg : ret.resultType
+							});
+						}
+					} else {
+						utilsFuncs.toastNetErr();
+					}
+				});
+			}
+
+			function initDeviceInfo() {
+				var deviceTypeObj = $("#deviceType");
+				var osVersionObj = $("#osVersion");
+				//		var jiupaiVersionObj= $("#jiupaiVersion");
+				var netTypeObj = $("#netType");
+				deviceTypeObj.text(deviceTypeObj.text() + api.systemType);
+				osVersionObj.text(osVersionObj.text() + api.systemVersion);
+				//		jiupaiVersionObj.text(jiupaiVersionObj.text()+ api.appVersion);
+				netTypeObj.text(netTypeObj.text() + api.connectionType);
+			}
+
+			apiready = function() {
+				api.showProgress();
+				var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey);
+				if (systemSetting != null && systemSetting != null && systemSetting.isNightStyle == 'true') {
+					utilsFuncs.setNightTime('nightLink', 1);
+				} else {
+					utilsFuncs.setNightTime('nightLink', 0);
+				}
+				api.hideProgress();
+				initDeviceInfo();
+			}
+		</script>
+	</body>
+</html>

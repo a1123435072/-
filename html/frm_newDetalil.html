@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>资讯详情</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"  />
+		<style>
+			body {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+			}
+			.newsContent {
+				padding: 0 5%;
+			}
+			.newsContent h1 {
+				font-size: 16px;
+				color: #333;
+				width: 100%;
+				line-height: 35px;
+				text-align: left;
+			}
+			.newsContent.newstitle0 {
+				font-size: 12px;
+			}
+			.newsContent .newstitle2 {
+				font-size: 20px;
+			}
+			.newsContent .newstitle3 {
+				font-size: 24px;
+			}
+			.title_other {
+				width: 100%;
+				color: #999;
+				float: left;
+				margin: 5px 0;
+			}
+			.title_other li {
+				float: left;
+				margin: 0 3px;
+				font-size: 14px;
+			}
+			.newsWordBox {
+				width: 100%;
+			}
+			.newsWordBox img, .newsWordBox p img {
+				width: 100% !important;
+			}
+			.newsWordBox p {
+				margin: 10px 0;
+				line-height: 30px;
+			}
+			.newsdesc0 {
+				font-size: 10px;
+			}
+			.newsdesc2 {
+				font-size: 16px;
+			}
+			.newsdesc3 {
+				font-size: 20px;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<div class="empty"></div>
+		<div class="newsContent" id="newsContent"></div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey);
+			if (systemSetting != '' && systemSetting != null && systemSetting.isNightStyle == 'true') {
+				utilsFuncs.setNightTime('nightLink', 1);
+			} else {
+				utilsFuncs.setNightTime('nightLink', 0);
+			}
+			render();
+			setRefreshHeader();
+		}
+		function render() {
+			api.showProgress();
+			getNewsDetal();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//获取新闻资讯详情
+		function getNewsDetal() {
+			var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey);
+			var userEntity = sessionAgent.getLoginInfo();
+			var userId = userEntity.userId;
+			var getNewsUrl = ajaxAgent.serverAction + '/app/index/infoDetail';
+			api.ajax({
+				url : getNewsUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						infoId : api.pageParam.newsId,
+						userId : userId
+					}
+				}
+			}, function(ret, err) {
+				if (ret.result == 1) {
+					var val = ret.detail;
+					var detalHtml = '';
+					if ((systemSetting != null) && (systemSetting.checkImgType == 'true')) {
+						var desc = val.contents.replace(/<\s?img[^>]*>/gi, "");
+					} else {
+						var desc = val.contents;
+					}
+					if ((systemSetting != null) && (systemSetting.fontSize == 0)) {
+						detalHtml += '<h1 class="newstitle0">' + val.title + '</h1>';
+						detalHtml += '<div class="newsWordBox  newsdesc0">' + desc + '</div>';
+					} else if ((systemSetting != null) && (systemSetting.fontSize == 2)) {
+						detalHtml += '<h1 class="newstitle2">' + val.title + '</h1>';
+						detalHtml += '<div class="newsWordBox  newsdesc2">' + desc + '</div>';
+					} else if ((systemSetting != null) && (systemSetting.fontSize == 3)) {
+						detalHtml += '<h1 class="newstitle3">' + val.title + '</h1>';
+						detalHtml += '<div class="newsWordBox  newsdesc3">' + desc + '</div>';
+					} else {
+						detalHtml += '<h1>' + val.title + '</h1>';
+						detalHtml += '<div class="newsWordBox">' + desc + '</div>';
+					}
+					$("#newsContent").html(detalHtml);
+				}
+			});
+		}
+
+		//头部刷新
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function() {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+	</script>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>东湖大数据交易中心</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+</head>
+<body>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+		api.openSlidLayout({
+			type : 'left',
+			leftEdge : api.winWidth - 240,
+			fixedPane : {
+				name : 'sidebar',
+				url : 'html/win_sidebar.html',
+				bounces : false,
+				vScrollBarEnabled : true,
+				hScrollBarEnabled : false
+			},
+			slidPane : {
+				name : 'main',
+				url : 'html/main.html',
+				bounces : false,
+				vScrollBarEnabled : true,
+				hScrollBarEnabled : false
+			}
+		});
+		api.lockSlidPane();
+    };
+</script>
+</html>

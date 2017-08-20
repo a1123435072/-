@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>免费数据</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			.indexAreaBox {
+				background: #fff;
+				border-top: solid 1px #c8c8c8;
+				border-bottom: solid 1px #c8c8c8;
+			}
+			/*.indexWhiteBg{padding:3% 5%; }*/
+			.CommonTitle {
+				border-bottom: solid 1px #e3e3e3;
+				color: #4f4f4f;
+				overflow: hidden;
+				padding: 10px 0;
+			}
+			.CommonTitle h2 {
+				font-size: 20px;
+				float: left;
+				font-weight: normal;
+			}
+			.CommonTitle a {
+				color: #929292;
+				font-size: 1.4em;
+				float: right;
+				padding: 0 10px;
+			}
+			.CommonTitle a img {
+				width: 80%;
+			}
+			.hotDataBox {
+				padding: 0 15px;
+				margin-top: 10px;
+			}
+			.listDataBox {
+				width: 100%;
+			}
+			.listDataBox li {
+				width: 100%;
+				position: relative;
+				float: left;
+				border-bottom: solid 1px #e3e3e3;
+				padding: 10px 0;
+			}
+			/*列表图片*/
+			.hotImageBox {
+				width: 75px;
+				height: 75px;
+			}
+			.hotImageBox img {
+				width: 100%;
+				height: 100%;
+				border-radius: 100%;
+				float: left;
+			}
+			/*列表标题数据类型收费*/
+			.hotWordBox {
+				margin: 0 0px 0 95px;
+			}
+			.hotWordBox h2 {
+				font-size: 17px;
+				font-weight: normal;
+			}
+			.hotWordBox em {
+				height: 25px;
+				float: left;
+				margin: 10px 0px;
+			}
+			.hotWordBox em img {
+				height: 100%;
+			}
+			.hotWordBox div {
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+			.hotWordBox div span {
+				padding: 5px 0px;
+				color: #444;
+				font-size: 15px;
+			}
+			.hotWordBox div i {
+				color: #3087d0;
+				font-style: normal;
+				margin-left: 5px;
+			}
+			/*列表按钮*/
+			.hotBtn {
+				padding: 10% 0 0 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 2;
+			}
+			.hotBtn span {
+				width: 45px;
+				height: 45px;
+				line-height: 45px;
+				border: solid 1px #c8c8c8;
+				background: #fff;
+				text-align: center;
+				border-radius: 56px;
+			}
+			.hotBtn span a {
+				color: #2f98e0;
+				font-size: 2.8em;
+			}
+			.hotBtn .listHoverBtn {
+				background: #2f98e0;
+				border: solid 1px #fff;
+			}
+			.listHoverBtn a {
+				color: #fff;
+			}
+			.freeBtn {
+				border: solid 1px #ccc;
+				background: #fff !important;
+				color: #666 !important;
+				border-radius: 3px;
+				padding: 0 5px;
+				margin-top: 15px;
+			}
+			.fontSize14 {
+				font-size: 14px;
+				margin-top: 15px;
+				color: #777;
+			}
+			.fontColor {
+				font-size: 14px;
+				margin-top: 15px;
+				color: #3087d0;
+				margin-left: 10px;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<div class="indexAreaBox">
+			<div class="indexWhiteBg">
+				<div class="hotDataBox">
+					<ul class="listDataBox" id="freelist"></ul>
+					<ul style="clear: both"></ul>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js"></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		var page = 1;
+		apiready = function() {
+			render();
+			setRefreshHeader();
+			api.addEventListener({
+				name : 'scrolltobottom'
+			}, function(ret, err) {
+				page++;
+				render();
+				api.parseTapmode();
+			});
+		}
+		function render() {
+			api.showProgress();
+			getFreeList();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//获取免费数据列表
+		function getFreeList() {
+			var getFreeUrl = ajaxAgent.serverAction + '/app/channelData/freeList';
+			getFreeUrl += '?currentPage=' + page + '&pageSize=10&rdnum=' + Math.random();
+			api.ajax({
+				url : getFreeUrl,
+				method : 'post',
+				timeout : 50,
+				dataType : 'json',
+				returnAll : false
+			}, function(ret, err) {
+				if (ret.free_list) {
+					if ((ret.free_list.length == 0) && (page == 1)) {
+						$(".listDataBox").html('<p style="text-align: center;">暂无数据！</p>');
+						return false;
+					}
+					var freeHtml = '';
+					$.each(ret.free_list, function(i, val) {
+						freeHtml += '<li><div class="hotImageBox fl"><img src="' + val.pic + '" /></div><div class="hotWordBox"><h2 onclick="showdata(' + val.id + ')">' + val.title + '</h2><em></em>';
+						freeHtml += '<div class="fl"><span>免费</span></div></div>';
+						freeHtml += '<div class="fr fontSize14"><span>浏览：' + val.view_count + '</span></div>';
+					});
+					if (page == 1) {
+						$("#freelist").html(freeHtml);
+					} else {
+						$("#freelist").append(freeHtml);
+					}
+				}
+			});
+		}
+
+		//头部刷新
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function(ret, err) {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+
+		//获取数据详情
+		function showdata(Id) {
+			if (sessionAgent.isLogin()){
+				api.openWin({
+					name : 'commonHomedDataDdetalil'+Id,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : 'dataDetalil'+Id,
+						bannerTitle : '免费数据',
+						bannerUrl : 'frm_dataDetalil.html',
+						articleId : Id
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		}
+	</script>
+<html>

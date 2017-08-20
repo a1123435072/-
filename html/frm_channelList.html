@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>频道列表数据列表</title>
+		<link rel="stylesheet" type="text/css"  href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css"  href="../css/style.css"  />
+		<style type="text/css">
+			/* 用户item */
+			.section1, .section2 {
+				margin-top: 20px;
+				background: #fff;
+				padding: 0;
+			}
+			/* 悬浮样式 */
+			.section1 .info02  .copycont .btnhover {
+				background-color: #ADBC7A;
+			}
+			.itemhover {
+				background-color: #eee;
+			}
+			.headerhover {
+				background-color: #36A8DC;
+			}
+			.comment-author {
+				font-size: 14px;
+				line-height: 1.25;
+				margin: 7px 0 5px 3px;
+				color: #323237;
+			}
+			.comment-content {
+				margin: 8px 5px 8px 3px;
+				line-height: 18px;
+				font-size: 16px;
+			}
+			.comment-oper {
+				text-align: right;
+				font-size: 14px;
+			}
+			.commentbox-wrap li span {
+				color: #1e50a2;
+			}
+			.comment-oper span {
+				padding: 5px;
+			}
+			.commentbox-wrap li {
+				padding: 7px 10px;
+				border-bottom: 1px solid #e5e5e5;
+				letter-spacing: 1px;
+			}
+			.comment-vote {
+				color: #ba2636;
+			}
+			/*列表样式*/
+			.listDataBox {
+				width: 90%;
+				margin: 0 5%;
+			}
+			.listDataBox li {
+				width: 100%;
+				position: relative;
+				float: left;
+				border-bottom: solid 1px #e3e3e3;
+				padding: 10px 0;
+			}
+			/*列表图片*/
+			.hotImageBox {
+				width: 75px;
+				height: 75px;
+			}
+			.hotImageBox img {
+				width: 100%;
+				height: 100%;
+				float: left;
+			}
+			/*列表标题数据类型收费*/
+			.hotWordBox {
+				margin: 0 0px 0 95px;
+			}
+			.hotWordBox h2 {
+				font-size: 17px;
+				font-weight: normal;
+			}
+			.hotWordBox em {
+				height: 25px;
+				float: left;
+				margin: 10px 0px;
+			}
+			.hotWordBox em img {
+				height: 100%;
+			}
+			.hotWordBox div {
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+			.hotWordBox div span {
+				padding: 5px 0px;
+				color: #444;
+				font-size: 15px;
+			}
+			.hotWordBox div i {
+				color: #3087d0;
+				font-style: normal;
+				margin-left: 5px;
+			}
+			/*列表按钮*/
+			.hotBtn {
+				padding: 10% 0 0 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 2;
+			}
+			.hotBtn span {
+				width: 45px;
+				height: 45px;
+				line-height: 45px;
+				border: solid 1px #c8c8c8;
+				background: #fff;
+				text-align: center;
+				border-radius: 56px;
+			}
+			.hotBtn span a {
+				color: #2f98e0;
+				font-size: 2.8em;
+			}
+			.hotBtn .listHoverBtn {
+				background: #2f98e0;
+				border: solid 1px #fff;
+			}
+			.listHoverBtn a {
+				color: #fff;
+			}
+			.freeBtn {
+				border: solid 1px #ccc;
+				background: #fff !important;
+				color: #666 !important;
+				border-radius: 3px;
+				padding: 0 5px;
+				margin-top: 15px;
+			}
+			.fontSize14 {
+				font-size: 14px;
+				margin-top: 15px;
+				color: #777;
+			}
+			.fontColor {
+				font-size: 14px;
+				margin-top: 15px;
+				color: #3087d0;
+				margin-left: 10px;
+			}
+			.switch .active {
+				border-bottom: solid 3px #ffa75e;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<div class="section1" id="section1">
+			<ul class="listDataBox"></ul>
+			<ul style="clear: both"></ul>
+		</div>
+		<div class="section2" id="section2"></div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js" ></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		var page = 1;
+		apiready = function() {
+			render();
+			setRefreshHeader();
+			api.addEventListener({
+				name : 'scrolltobottom'
+			}, function(ret, err) {
+				page++;
+				render();
+				api.parseTapmode();
+			});
+		}
+		function render() {
+			api.showProgress();
+			getChannlList();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//获取对应频道列表
+		function getChannlList() {
+			var getChannelUrl = ajaxAgent.serverAction + '/app/channelData/list';
+			getChannelUrl += '?currentPage=' + page + '&pageSize=10&rdnum=' + Math.random();
+			api.ajax({
+				url : getChannelUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						catId : api.pageParam.catId,
+						catName : api.pageParam.catName
+					}
+				}
+			}, function(ret, err) {
+				if (ret) {
+					if ((ret.listArray.length == 0) && (page == 1)) {
+						$(".listDataBox").html('<p style="text-align: center;">暂无数据！</p>');
+						return false;
+					}
+					var listdataHtml = '';
+					$.each(ret.listArray, function(i, val) {
+						listdataHtml += '<li  onclick="showdata(' + val.id + ')"><div class="hotImageBox fl"><img src="' + val.pic + '" /></div><div class="hotWordBox"><h2>' + val.title + '</h2><em></em>';
+						if (val.is_free == 1) {
+							listdataHtml += '<div class="fl"><span>免费</span></div></div>';
+						} else {
+							listdataHtml += '<div class="fl"><span>¥</span><i>' + val.price + '元</i></div></div>';
+						}
+						listdataHtml += '<div class="fr fontSize14"><span>浏览：' + val.view_count + '</span></div></div></li>';
+					});
+					if (page == 1) {
+						$(".listDataBox").html(listdataHtml);
+					} else {
+						$(".listDataBox").append(listdataHtml);
+					}
+				} else {
+				}
+			});
+		}
+
+		//头部刷新
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function() {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+
+		//获取数据详情
+		function showdata(Id) {
+			if (sessionAgent.isLogin()){
+				api.openWin({
+					name : 'commonHomedDataDdetalil'+Id,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : 'dataDetalil'+Id,
+						bannerTitle : api.pageParam.catName,
+						bannerUrl : 'frm_dataDetalil.html',
+						catId : api.pageParam.catId,
+						articleId : Id
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		}
+	</script>
+</html>

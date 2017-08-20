@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/aui.min.css" />
+		<style>
+			.settingBtn {
+				overflow: hidden;
+				background-image: url('../images/icon_bg.png');
+				background-repeat: no-repeat;
+				background-size: 32px 454px;
+				width: 22px;
+				height: 20px;
+				background-position: 0 -248px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-content">
+			<ul class="aui-list-view">
+				<li class="aui-list-view-cell" tapmode="" onclick="editUserInfo('nickName','修改昵称','frm_userEditNickName.html');">
+					<a class="aui-arrow-right aui-iconfont aui-icon-command"> 修改昵称</a>
+				</li>
+				<li class="aui-list-view-cell" tapmode="" onclick="editUserInfo('passWord','修改密码','frm_userEditPassWord.html');">
+					<a class="aui-arrow-right aui-iconfont aui-icon-unlock"> 修改密码</a>
+				</li>
+				<li class="aui-list-view-cell authBtn" tapmode="">
+					<a class="aui-iconfont aui-icon-selection" > 我的邀请码<span id="requestCode" class="aui-pull-right"></span></a>
+				</li>
+			</ul>
+		</div>
+		<!--<ul class="activity">
+		<li onclick="editUserInfo('nickName');">
+		<span class="key">昵称</span>
+		<span id="nickNameSpan" class="value"></span>
+		</li>
+		<li onclick="editUserInfo('pwd');">
+		<span class="key">密码</span>
+		<span class="value">修改</span>
+		</li>
+		<li class="noBackImg">
+		<span class="key">我的邀请码</span>
+		<span class="value" id="requestCode">无</span>
+		</li>
+		</ul>-->
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/zepto.min.js"></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script>
+			apiready = function() {
+				var userEntity = sessionAgent.getLoginInfo();
+				api.pageParam.userId = userEntity.userId;
+				setNickName(userEntity.nickName, userEntity.invitidNum);
+				api.execScript({
+					name : 'setting',
+					script : "setExecFunc(function(){api.execScript({name: 'user_center',script: 'checkUserId();'});});"
+				});
+			};
+			function setNickName(nameStr, invitidNum) {
+				if (invitidNum != null && invitidNum != "") {
+					$("#requestCode").text(invitidNum);
+				} else {
+					$("#requestCode").text('无');
+				}
+			}
+
+			function editUserInfo(frmName, frmTitle, frmUrl) {
+				api.openWin({
+					name : 'commonHome' + frmName,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : frmName,
+						bannerTitle : frmTitle,
+						bannerTag : frmName,
+						bannerUrl : frmUrl
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		</script>
+	</body>
+</html>

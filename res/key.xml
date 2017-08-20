@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+	<item name="aliPay_partner" value="2088021405050027"/>
+	<item name="aliPay_seller" value="2088021405050027"/>
+	<item name="aliPay_rsaPriKey" value="MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMhKGqId9No0nasDSbukMDlLvVNmCpgD40WhdbPsIO/WRdq2RaLtqfjUHlOV4YXNIEK76co6Y+nvMEHNztzJeoALlxBiudWfUi2rSNsc+dqFLf9py+pJ1SUsbxNgUkMu9CTljF9syOOYoNYahq4IjnTmIZd3RMXOMWtLIASxHMi5AgMBAAECgYEAqmXBOuNZiLry2Kc3d5g8HsK9E9LgeGv2UysGREhDzUfyrhwcKn0f+j4cfugosfjN1XihchczIbcIyzMZJuWSfRIUoXNVzHmfvX1M92HtnAPpGqV7c6JTqpUnXaE2sayYHV4hp/kra1nRhW8OTVjyi4/p1TsTy92IIPuvLcre5AECQQD6tPQZZ0CThMXO3o7Vdb92TF80CakM5UsGTQbb28jqCnMupqSCb6rLHHDjVqNzSNvEyE5g4kvcnKQYJxyVbtohAkEAzISmP/8Jj5y9lmTNsH1yyMYxrFGAoN48N92IK9i9Sf3xTf8s5gkNlSFe6dnLQvBS3rrWyxSXlHLTojHHUN0LmQJBAPH0S5RsurzkKceRsQW/ws0XvdXJ8PW6IOLu2cy727ZL6Ye/WgtsW8f0Jdqx1cNAMKFEs6f7Hj3GivOoY4SwXCECQHLZbw7zJqhaSfEh7IxW9lWfTxfIsSYlhsWMh0KwNSRPEepOCSWpIdKEaeuC3e1aTf88BxEGIFVB4mzr7VUQvMkCQQCDgem7ZwTyypPvoEfiii5QxIzcKTAL0+7Uuj1VmgpdUzQ0IzKC09gLpTV79b0DEPy5dHrFm0G0lYbA13aXyT8p"/>
+	<item name="aliPay_rsaPubKey" value="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB"/>
+	<item name="aliPay_notifyURL" value="http://www.chinadatatrading.com/business/alipay/toNotify_url"/>
+</security>
+<security>
+	<item name="wxPay_appId" value="wx707b3bb40a1547f1"/>
+	<item name="wxPay_mchId" value="1280351601"/>
+	<item name="wxPay_partnerKey" value="l2t3h9d1a2t3a5t8r13a21d34i55n89g"/>
+	<item name="wxPay_notifyUrl" value="http://www.chinadatatrading.com"/>
+</security>
+

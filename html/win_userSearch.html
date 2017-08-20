@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>window</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<style>
+			* {
+				outline: 0;
+			}
+			/*header*/
+			header {
+				border-bottom: 1px solid #3087d0;
+			}
+			.header {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-pack: center;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				-webkit-justify-content: center;
+				background-color: #3087d0;
+			}
+			.header .icon {
+				display: block;
+				background-size: 20px;
+				background-repeat: no-repeat;
+				background-position: center;
+				padding: 25px;
+			}
+			.header .back {
+				background-image: url("../image/ic_back.png");
+			}
+			.searchWrap {
+				position: relative;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				font-size: 14px;
+				height: 40px;
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				background-color: #ffffff;
+			}
+			.header div input {
+				display: block;
+				width: 86%;
+				height: 30px;
+				padding-left: 5px;
+				line-height: 20px;
+				border-radius: 0;
+			}
+			.close {
+				bottom: 5px;
+				right: 1px;
+				position: absolute;
+				background-image: url("../image/close.png");
+				height: 30px;
+				width: 30px;
+				background-size: 25px;
+				background-repeat: no-repeat no-repeat;
+				background-position: right;
+			}
+			.btn {
+				margin: 0 10px;
+				width: 50px;
+				height: 40px;
+				color: #330000;
+				text-align: center;
+				line-height: 40px;
+				background-color: #E5E5E5;
+			}
+			.indexAreaBox {
+				background: #f00;
+				margin-top: 0px;
+				width: 100%;
+				height: 500px;
+			}
+			/*频道图片样式*/
+			.indexAreaBox {
+				background: #fff;
+				margin-top: 0px;
+				width: 100%;
+			}
+			.indexWhiteBg {
+				padding: 0% 5% 3% 5%;
+			}
+			.CommonTitle {
+				border-bottom: solid 1px #e3e3e3;
+				color: #4f4f4f;
+				overflow: hidden;
+				padding: 5px 0;
+			}
+			.CommonTitle h2 {
+				font-size: 18px;
+				float: left;
+				font-weight: normal;
+			}
+			.CommonTitle a {
+				color: #929292;
+				font-size: 1.4em;
+				float: right;
+				padding: 0 10px;
+			}
+			.CommonTitle a img {
+				width: 80%;
+			}
+			.quckNav {
+				/*margin-top: 10px;*/
+			}
+			.quckNav, .quckNav ul {
+				width: 100%;
+			}
+			.quckNav ul {
+				display: block;
+				float: left;
+			}
+			.quckNav ul li {
+				width: 24.6%;
+				/*border: solid 1px #cdcdcd;
+				 margin: 0 0 -1px -1px;*/
+				list-style: none;
+				height: 85px;
+				text-align: center;
+				float: left;
+			}
+			.quckNav ul li a {
+				color: #858585;
+				padding: 10px 0;
+				height: 75px;
+				width: 100%;
+			}
+			.quckNav ul li a img {
+				width: 40px;
+				margin: 0 18%;
+			}
+			.quckNav ul li a:hover {
+				background: #f3f3f3;
+			}
+			.quckNav ul li a h4, .quckNav ul li a h5 {
+				font-weight: normal;
+				margin: 0;
+				padding: 0;
+			}
+			.quckNav ul li a h4 {
+				font-size: 14px;
+				margin-bottom: 2px;
+				margin-top: 5px;
+				color: #333;
+			}
+			.quckNav ul li a h5 {
+				font-size: 12px;
+			}
+			.quckNav ul li a.indexMore {
+				width: 100%;
+			}
+			.quckNav ul li a.indexMore span {
+				width: 30px;
+				margin: 20% 0;
+				height: 30px;
+				border-radius: 100%;
+				background: #419fee;
+				text-align: center;
+				color: #Fff;
+				font-size: 28px;
+				font-weight: bold;
+				line-height: 28px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<header class="header">
+				<div class="index header">
+					<div class="icon back" onclick="goBack()"></div>
+					<div class="searchWrap">
+						<input type="text" id="keyWord" name="keyWord" placeholder="请输入关键词"/>
+						<div class="close" tapmode="" onclick="reset()"></div>
+					</div>
+					<div class="btn" tapmode="" onclick="seach()">
+						确定
+					</div>
+				</div>
+			</header>
+		</div>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/jquery.min.js" ></script>
+		<script type="text/javascript" src="../script/zepto.min.js"></script>
+		<script type="text/javascript" src="../script/funcTools.js" ></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script type="text/javascript">
+			apiready = function() {
+				fixIos7Bar($("header"));
+				api.setStatusBarStyle({
+					style : 'light'
+				});
+			}
+			function seach() {
+				var keyWord = $("#keyWord").val();
+				var $header = $api.dom('.header');
+				var header_h = $api.offset($header).h;
+				api.openFrame({
+					name : 'search',
+					url : 'frm_userSearch.html',
+					rect : {
+						x : 0,
+						y : header_h,
+						w : 'auto',
+						h : 'auto'
+					},
+					pageParam : {
+						keyWord : keyWord
+					}
+				});
+			}
+
+			function goback() {
+				api.closeWin({});
+			}
+
+			function reset() {
+				var keyWord = $api.dom("#keyWord");
+				$api.val(keyWord, "");
+			}
+		</script>
+	</body>
+</html>

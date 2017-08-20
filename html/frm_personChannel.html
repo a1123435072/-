@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>个性化定制频道主体</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			html, body {
+				height: 100%;
+				min-width: 320px;
+			}
+			body {
+				font-size: 14px;
+			}
+			.switchNav {
+				position: relative;
+				width: 98%;
+				line-height: 35px;
+				text-indent: 10px;
+			}
+			.navTips {
+				width: 70px;
+				height: 23px;
+				position: absolute;
+				right: 0;
+				bottom: 5px;
+				font-size: 12px;
+				line-height: 23px;
+				color: #3087d0;
+				margin-top: 2px;
+				border: 1px solid;
+				border-radius: 10px;
+			}
+			nav {
+				width: 100%;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				background-color: #F6F6F6;
+			}
+			#wrapper {
+				position: relative;
+				z-index: 1;
+				height: 35px;
+				width: 80%;
+				overflow: hidden;
+			}
+			.arrow_down {
+				display: block;
+				background-size: 15px;
+				background-repeat: no-repeat;
+				background-position: center;
+				padding: 0px 15px;
+				border-radius: 10px;
+				text-align: center;
+				height: 20px;
+				line-height: 20px;
+				color: #EC971F;
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				margin: 5px 10px 0 0;
+				border: solid 1px #EC971F;
+				/*background-image: url('../image/nav_arrow.png');
+				 -webkit-transform: rotate(180deg);
+				 -webkit-transition: All .5s ease;*/
+			}
+			.quckNav {
+				margin-top: 10px;
+			}
+			.quckNav, .quckNav ul {
+				width: 100%;
+			}
+			.quckNav ul {
+				display: block;
+				float: left;
+			}
+			.quckNav ul li {
+				width: 24.6%;
+				border: solid 1px #cdcdcd;
+				margin: 0 0 -1px -1px;
+				list-style: none;
+				height: 85px;
+				text-align: center;
+				float: left;
+				position: relative;
+			}
+			.quckNav ul li a {
+				color: #858585;
+				padding: 10px 0;
+				height: 65px;
+				width: 100%;
+			}
+			.quckNav ul li a img {
+				width: 40px;
+				margin: 0 18%;
+			}
+			.quckNav ul li a:hover {
+				background: #f3f3f3;
+			}
+			.quckNav ul li a h4, .quckNav ul li a h5 {
+				font-weight: normal;
+				margin: 0;
+				padding: 0;
+			}
+			.quckNav ul li a h4 {
+				font-size: 0.8em;
+				margin-bottom: 2px;
+			}
+			.quckNav ul li a h5 {
+				font-size: 0.6em;
+			}
+			.quckNav ul li a.indexMore {
+				width: 100%;
+			}
+			.quckNav ul li a.indexMore span {
+				width: 30px;
+				margin: 20% 0;
+				height: 30px;
+				border-radius: 100%;
+				background: #419fee;
+				text-align: center;
+				color: #Fff;
+				font-size: 28px;
+				font-weight: bold;
+				line-height: 28px;
+			}
+			.more-lable {
+				padding: 10px;
+				background-color: #E7E7E7;
+			}
+			.closeImg {
+				width: 20px;
+				float: right;
+				top: 0px;
+				right: 0px;
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<div id="wrapper">
+				<div class="switchNav">
+					切换栏目 <!--<span class="navTips">排序删除</span>-->
+				</div>
+			</div>
+			<div class="arrow_down" tapmode="" onclick="saveCannel()" >
+				保存
+			</div>
+		</nav>
+		<div class="quckNav">
+			<ul id="NavFlist"></ul>
+			<br style="clear:both">
+		</div>
+		<div class="more-lable">
+			点击添加更多栏目
+		</div>
+		<div class="quckNav">
+			<ul id="NavNlist"></ul>
+			<br style="clear:both">
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js" ></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			getChannel();
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function() {
+				getChannel();
+				api.refreshHeaderLoadDone();
+			});
+		}
+		//获取频道列表
+		function getChannel() {
+			var ChannelList = $api.getStorage('ChannelList');
+			var ChannelNList = $api.getStorage('ChannelNList');
+			if (ChannelList && ChannelNList) {
+				getChannelByCache();
+			} else {
+				getChannelByAjax();
+			}
+		}
+
+		//缓存中获取频道列表
+		function getChannelByCache() {
+			var ChannelList = $api.getStorage('ChannelList');
+			var ChannelNList = $api.getStorage('ChannelNList');
+			var listFHtml = '';
+			var listNHtml = '';
+			$.each(ChannelList, function(i, val) {
+				listFHtml += '<li><a class="icon01"><img src="../image/icon_' + val.catId + '.png" /><h4 data-catId="' + val.catId + '">' + val.catName + '</h4><h5>(' + val.count + ')</h5></a><img class="closeImg" src="../image/close_cate.png" onclick="delLi(this)"></li>';
+			});
+			$.each(ChannelNList, function(i, val) {
+				listNHtml += '<li><a href="#" class="icon01"><img src="../image/icon_' + val.catId + '.png" /><h4 data-catId="' + val.catId + '">' + val.catName + '</h4><h5>(' + val.count + ')</h5></a></li>';
+			});
+			$("#NavFlist").html(listFHtml);
+			$("#NavNlist").html(listNHtml);
+		}
+
+		//服务器获取频道列表
+		function getChannelByAjax() {
+			var userEntity = sessionAgent.getLoginInfo();
+			var userId = userEntity.userId;
+			var getChannelUrl = ajaxAgent.serverAction + '/app/index/getChannel';
+			api.ajax({
+				url : getChannelUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						userId : userId
+					}
+				}
+			}, function(ret, err) {
+				if (ret.list && ret.nList) {
+					var listFHtml = '';
+					var listNHtml = '';
+					$.each(ret.list, function(i, val) {
+						listFHtml += '<li><a class="icon01"><img src="../image/icon_' + val.catId + '.png" /><h4 data-catId="' + val.catId + '">' + val.catName + '</h4><h5>(' + val.count + ')</h5></a><img class="closeImg" src="../image/close_cate.png" onclick="delLi(this)"></li>';
+					});
+					$.each(ret.nList, function(i, val) {
+						listNHtml += '<li><a href="#" class="icon01"><img src="../image/icon_' + val.catId + '.png" /><h4 data-catId="' + val.catId + '">' + val.catName + '</h4><h5>(' + val.count + ')</h5></a></li>';
+					});
+					$("#NavFlist").html(listFHtml);
+					$("#NavNlist").html(listNHtml);
+					$api.rmStorage('ChannelList');
+					$api.rmStorage('ChannelNList');
+					$api.setStorage('ChannelList', ret.list);
+					$api.setStorage('ChannelNList', ret.nList);
+				}
+			});
+		}
+
+		//用户删除定制频道
+		function delLi(clkImg) {
+			var clkCate = $(clkImg).parent(), selCateId = clkCate.attr("cateId"), liObj = event.currentTarget.parentNode;
+			$(clkImg).remove();
+			$("#NavNlist").append(liObj.outerHTML);
+			clkCate.remove();
+		}
+
+		//用户添加频道
+		$("#NavNlist").on('click', 'li', function(e) {
+			var clkCate = $(e.currentTarget), selCateId = clkCate.attr("cateId");
+			clkCate.html('<img class="closeImg" src="../image/close_cate.png" onclick="delLi(this);">' + clkCate.html());
+			$("#NavFlist").append(e.currentTarget.outerHTML);
+			clkCate.remove();
+		})
+		//用户保存频道信息
+		function saveCannel() {
+			var userEntity = sessionAgent.getLoginInfo();
+			var userId = userEntity.userId;
+			var saveChannelUrl = ajaxAgent.serverAction + '/app/index/addChannel';
+			if (userId == '' || userId == null || !userId) {
+				api.toast({
+					msg : '您需要登录才能保存！',
+					duration : 1000,
+					location : 'middle'
+				});
+				return false;
+			}
+			api.addEventListener({
+				name : 'offline'
+			}, function(ret, err) {
+				api.toast({
+					msg : '您当前处于离线状态保存失败！',
+					duration : 1000,
+					location : 'middle'
+				});
+				return false;
+			});
+			var tagLi = $("#NavFlist li a h4");
+			var tagarr = $.makeArray(tagLi);
+			var tarlenth = tagarr.length;
+			var channelArray = [];
+			for (var i = 0; i < tarlenth; i++) {
+				var catId = $(tagarr[i]).attr("data-catId");
+				channelArray.push(catId);
+			}
+			var catIds = JSON.stringify(channelArray);
+			api.ajax({
+				url : saveChannelUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						userId : userId,
+						catIds : catIds
+					}
+				}
+			}, function(ret, err) {
+				if (ret.result == 1) {
+					api.toast({
+						msg : '保存成功！',
+						duration : 2000,
+						location : 'middle'
+					});
+					getChannelByAjax();
+					api.execScript({
+						name : 'main',
+						frameName : 'index',
+						script : 'getChannel()'
+					});
+					api.closeWin();
+				}
+			});
+		}
+	</script>
+</html>

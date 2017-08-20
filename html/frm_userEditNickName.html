@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<style>
+			body {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+			}
+			.login-header-btn {
+				display: block;
+				background-size: 30px;
+				padding: 20px;
+			}
+			.content {
+				-webkit-box-flex: 1;
+			}
+			.detail-header {
+				border-bottom: 1px solid #CDCDCD;
+				background-color: #3087d0;
+			}
+			.back {
+				background-size: 40px !important;
+				background-image: url("../image/weather_back@2x.png");
+				background-position: right !important;
+			}
+			.detail-header a {
+				padding: 25px;
+			}
+			.title {
+				color: #FFFFFF;
+				text-align: center;
+				line-height: 50px;
+				font-size: 18px;
+			}
+			i {
+				display: block;
+				width: 30px;
+				height: 30px;
+				background-size: 30px;
+				background-repeat: no-repeat no-repeat;
+				background-position: center;
+			}
+			.nickName {
+				background-image: url("../image/user.png");
+			}
+			.user {
+				background-image: url("../image/user_weiboimage_board@2x.png");
+			}
+			.password {
+				background-image: url("../image/login_password_icon@2x.png");
+			}
+			.input-wrap {
+				padding: 10px 0;
+				display: -webkit-box;
+				border-bottom: 1px solid #d4d4d4;
+			}
+			.form {
+				background: #f6f6f6;
+				margin: 20px;
+				border-radius: 8px;
+				padding: 0 10px;
+				line-height: 30px;
+			}
+			.input-wrap input {
+				display: block;
+				-webkit-box-flex: 1;
+				background-color: rgba(255, 255, 255, 0);
+				outline: none;
+				height: 32px;
+			}
+			.find-pwd {
+				text-align: right;
+				margin: 40px;
+			}
+			.btn {
+				display: block;
+				color: #fff;
+				margin: 0 40px;
+				text-align: center;
+				border-radius: 8px;
+				height: 40px;
+				line-height: 40px;
+				background: #F8812A
+			}
+			input {
+				padding-left: 10px;
+				font-size: 18px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="content">
+			<div class="form">
+				<div class="input-wrap">
+					<i class="nickName"></i>
+					<input class="formIpt" type="text" validType="checkNull" placeholder="新的昵称" id="nickName" value="" maxlength="20">
+				</div>
+			</div>
+			<div class="btn" id="login" tapmode="" onclick="submit()">
+				确认
+			</div>
+		</div>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/zepto.min.js"></script>
+		<script type="text/javascript" src="../script/funcTools.js"></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script type="text/javascript">
+			
+			function submit() {
+				var userEntity = sessionAgent.getLoginInfo();
+				var userId = userEntity.userId;
+				var newNickName = $("#nickName").val();
+				if (newNickName == "" || newNickName == null) {
+					api.toast({
+	
+						msg : '请填写新的昵称',
+						location : 'middle'
+					
+					});
+					return false;
+				}
+				var actionUrl = ajaxAgent.serverAction;
+				actionUrl += '/app/user/updateNickname';
+				api.showProgress();
+				api.ajax({
+					url : actionUrl,
+					method : 'post',
+					timeout : 50,
+					dataType : 'json',
+					returnAll : false,
+					data : {
+						values : {
+							userId : userId,
+							nickName : newNickName
+						}
+					}
+				}, function(ret, err) {
+					api.hideProgress();
+					if (ret) {
+						if (1 == ret.result) {
+							var userEntity = sessionAgent.getLoginInfo();
+								userEntity.nickName = newNickName;
+								sessionAgent.setLoginInfo(userEntity);
+							api.alert({msg:'修改成功'});
+							api.execScript({
+								name : 'commonMainuser',
+								frameName : 'user',
+								script : 'checkUserId()'
+							});
+							api.closeWin();
+						} else {
+							api.alert({msg : ret.msg});
+						}
+					} else {
+						utilsFuncs.toastNetErr();
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

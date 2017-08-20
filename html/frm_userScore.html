@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>我的资产首页</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui.min.css" />
+		<style>
+			.settingBtn {
+				overflow: hidden;
+				background-image: url('../images/icon_bg.png');
+				background-repeat: no-repeat;
+				background-size: 32px 454px;
+				width: 22px;
+				height: 20px;
+				background-position: 0 -248px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-content">
+			<ul class="aui-list-view">
+				<li class="aui-list-view-cell" tapmode="" onclick="menuAction('myWallet','我的钱包','frm_userWallet.html');">
+					<a class="aui-arrow-right aui-iconfont aui-icon-cart">我的钱包</a>
+				</li>
+				<!--
+				<li class="aui-list-view-cell" tapmode="" onclick="menuAction('todayZc');">
+				<a class="aui-arrow-right aui-iconfont aui-icon-activity"> 今日任务</a>
+				</li>
+				<li class="aui-list-view-cell" tapmode="" onclick="menuAction('exchange');">
+				<a class="aui-arrow-right aui-iconfont aui-icon-cart"> 资产兑换</a>
+				</li>
+				<li class="aui-list-view-cell" tapmode="" onclick="menuAction('addApplyCode');">
+				<a class="aui-arrow-right aui-iconfont aui-icon-friendfamous"> 补填邀请码</a>
+				</li>
+				<li class="aui-list-view-cell authBtn" tapmode="">
+				<a class="aui-arrow-right aui-iconfont aui-icon-addressbook" > 邀请好友</a>
+				</li>-->
+			</ul>
+		</div>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/zepto.min.js"></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script type="text/javascript">
+			apiready = function() {
+				var userEntity = sessionAgent.getLoginInfo();
+				api.pageParam.userId = userEntity.userId;
+				api.pageParam.invitidNum = userEntity.invitidNum;
+			};
+			function setNickName(nameStr, invitidNum) {
+				$("#nickNameSpan").text(nameStr);
+				if (invitidNum != null && invitidNum != "") {
+					$("#requestCode").text(invitidNum);
+				} else {
+					$("#requestCode").text('无');
+				}
+			}
+
+			function menuAction(frmName, frmTitle, frmUrl) {
+				api.openWin({
+					name : 'commonHome' + frmName,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : frmName,
+						bannerTitle : frmTitle,
+						bannerTag : frmName,
+						bannerUrl : frmUrl
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>新闻资讯列表</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			html, body {
+				width: 100%;
+				min-height: 100%;
+				background: #e5e5e5;
+			}
+			.h80 {
+				height: 80px;
+			}
+			.h40 {
+				height: 40px;
+				line-height: 40px;
+			}
+			.h20 {
+				height: 20px;
+			}
+			.h10 {
+				height: 10px;
+				background: #e5e5e5;
+			}
+			.h1 {
+				height: 1px;
+				margin-left: 15px;
+				background: #e5e5e5;
+			}
+			.fr {
+				float: right;
+			}
+			.fl {
+				float: left;
+			}
+			.hightitem {
+				background-color: #fff;
+			}
+			/* 猜你喜欢 */
+			.guesstitle {
+				height: 40px;
+				line-height: 40px;
+				padding-left: 10px;
+				vertical-align: top;
+				font-size: 12px;
+				color: #999;
+			}
+			.guesstitle img {
+				height: 15px;
+				padding-top: 12px;
+				padding-left: 10px;
+			}
+			.home-tuan-list {
+				background: #fff;
+				padding-top: 15px;
+			}
+			.home-tuan-list .item {
+				position: relative;
+				display: block;
+				padding-left: 10px;
+				border-bottom: 1px solid #e0e0e0;
+			}
+			.home-tuan-list .cnt {
+				padding: 7px 10px 10px 0;
+				display: box;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				min-height: 78px;
+				background-size: auto 1px;
+			}
+			.home-tuan-list .pic {
+				margin-right: 10px;
+				background: center;
+			}
+			.home-tuan-list img {
+				width: 87px;
+				height: 65px;
+				margin-top: 7px;
+				margin-bottom: 5px;
+				border-radius: 3px;
+			}
+			.home-tuan-list .wrap {
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+			}
+			.home-tuan-list .wrap2 {
+				display: table;
+				height: 88px;
+				width: 100%;
+			}
+			.home-tuan-list .content {
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.home-tuan-list .shopname {
+				color: #333; /*line-height: 16px;*/
+				font-size: 17px;
+				max-width: 11em;
+				white-space: nowrap;
+				margin-top: 10px;
+				word-wrap: normal;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				min-height: 10px;
+				display: inline-block;
+			}
+			.home-tuan-list .title {
+				color: #666;
+				line-height: 16px;
+				font-size: 13px;
+				max-height: 30px;
+				margin-top: 10px;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				-webkit-flex-flow: column;
+				flex-flow: column;
+			}
+			.Fix:after {
+				display: block;
+				content: '';
+				height: 0;
+				clear: both;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<!-- 1. 3X3 -->
+		<div class="home-tuan-list" id="list1"></div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/sessions.js" ></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript">
+		var page = 1;
+		apiready = function() {
+			var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey);
+			if (systemSetting != '' && systemSetting != null && systemSetting.isNightStyle == 'true') {
+				utilsFuncs.setNightTime('nightLink', 1);
+			} else {
+				utilsFuncs.setNightTime('nightLink', 0);
+			}
+			render();
+			setRefreshHeader();
+			api.addEventListener({
+				name : 'scrolltobottom'
+			}, function(ret, err) {
+				page++;
+				render();
+				api.parseTapmode();
+			});
+		}
+		function render() {
+			api.showProgress();
+			getNewsListByAjax();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//从服务器获取新闻列表
+		function getNewsListByAjax() {
+			var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey);
+			var getNewsListUrl = ajaxAgent.serverAction + '/app/index/infoList';
+			getNewsListUrl += '?currentPage=' + page + '&pageSize=10&rdnum=' + Math.random();
+			api.ajax({
+				url : getNewsListUrl,
+				method : 'post',
+				timeout : 50,
+				dataType : 'json',
+				returnAll : false
+			}, function(ret, err) {
+				if (ret.news_list) {
+					if ((ret.news_list.length == 0) && (page == 1)) {
+						$("#list1").html('<p style="text-align: center;">暂无数据！</p>');
+						return false;
+					}
+					var listHtml = '';
+					$.each(ret.news_list, function(i, val) {
+						var newclick = "showNew(" + val.id + ")";
+						listHtml += '<a class="item Fix hightitem" tapmode="presshover"><div class="cnt">';
+						if ((systemSetting != null) && (systemSetting.checkImgType == 'true')) {//智能无图模式不加载图片
+							listHtml += '<div class="wrap"><div class="content"><div class="shopname" onclick="' + newclick + '">' + val.title + '</div><div class="title">' + val.abstracts + '</div></div></div></div></div></div></a>';
+						} else {//正常模式下显示图文混合
+							if (val.pic != '') {
+								listHtml += '<img class="pic" src="' + val.pic + '" onclick="' + newclick + '">';
+							}
+							listHtml += '<div class="wrap"><div class="content"><div class="shopname" onclick="' + newclick + '">' + val.title + '</div><div class="title">' + val.abstracts + '</div></div></div></div></div></div></a>';
+						}
+					});
+					if (page == 1) {
+						$("#list1").html(listHtml);
+					} else {
+						$("#list1").append(listHtml);
+					}
+				}
+			});
+		}
+
+		//头部下拉刷新
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function(ret, err) {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+
+		//获取新闻详情
+		function showNew(Id) {
+			api.openWin({
+				name : 'commonHomedNewDdetalil'+Id,
+				url : 'win_commonHomeTitle.html',
+				pageParam : {
+					bannerName : 'newDetalil'+Id,
+					bannerTitle : '新闻详情',
+					bannerUrl : 'frm_newDetalil.html',
+					newsId : Id
+				},
+				bounces : false,
+				vScrollBarEnabled : false,
+				hScrollBarEnabled : false,
+				reload : true
+			});
+		}
+	</script>
+</html>

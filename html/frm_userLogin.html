@@ -1,0 +1,251 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>用户登录</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style type="text/css">
+			body {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				background: #Fff;
+			}
+			.content {
+				-webkit-box-flex: 1;
+			}
+			i {
+				display: block;
+				width: 30px;
+				height: 30px;
+				background-size: 30px;
+				background-repeat: no-repeat no-repeat;
+				background-position: center;
+			}
+			.user {
+				background-image: url("../image/user_icon@2x.png");
+			}
+			.password {
+				background-image: url("../image/password_icon@2x.png");
+			}
+			.input-wrap {
+				padding: 10px 0;
+				display: -webkit-box;
+				border-bottom: 1px solid #d4d4d4;
+			}
+			.form {
+				background-color: rgba(255, 255, 255, 0.8);
+				margin: 20px;
+				padding: 0 10px;
+				line-height: 30px;
+			}
+			.input-wrap input {
+				display: block;
+				-webkit-box-flex: 1;
+				background-color: rgba(255, 255, 255, 0);
+				outline: none;
+				height: 32px;
+			}
+			.btn {
+				display: block;
+				color: #000000;
+				margin: 0 40px;
+				text-align: center;
+				border-radius: 8px;
+				height: 40px;
+				line-height: 40px;
+				border: 1px solid #CECECE;
+			}
+			input {
+				padding-left: 10px;
+				font-size: 18px;
+			}
+			.other-login-wrap, .other-login {
+				margin-top: 30px;
+			}
+			.other-login-lable {
+				padding: 10px 20px;
+				border-bottom: 1px solid #E7E7E7;
+			}
+			.other-login {
+				text-align: center;
+			}
+			.other-login div {
+				display: inline-block;
+				margin: 10px 10px;
+				position: relative;
+				width: 25.4%;
+				height: 60px;
+				background-repeat: no-repeat no-repeat;
+				background-position: center center;
+				background-size: 60px;
+			}
+			.sina {
+				background-image: url("../image/share_platform_sina@2x.png");
+			}
+			.qq {
+				background-image: url("../image/share_platform_qqfriends@2x.png");
+			}
+			.weixin {
+				background-image: url("../image/weixin.png");
+			}
+			.other-login div span {
+				margin-top: 70px;
+			}
+			footer {
+				position: relative;
+				height: 50px;
+				text-align: center;
+				line-height: 50px;
+			}
+			.fast-reg {
+				line-height: 20px;
+				position: absolute;
+				border-radius: 10px;
+				border: 1px solid #E7E7E7;
+				bottom: 14px;
+				right: 20px;
+				width: 70px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="content">
+			<div class="form">
+				<div class="input-wrap">
+					<i class="user"></i>
+					<input type="text" class="formIpt" validType="checkNull" placeholder="请输入手机号"  id="cellPhoneNum" value="">
+				</div>
+				<div class="input-wrap">
+					<i class="password"></i>
+					<input type="password" class="formIpt" validType="checkNull" placeholder="请输入密码"  id="pwd" value="">
+					<button onclick="toSet('findPassWord','找回密码','frm_userFindPassWord.html')">
+						忘记密码
+					</button>
+				</div>
+			</div>
+			<div class="btn" id="login" tapmode="" onclick="login()">
+				登录
+			</div>
+			<!--第三方登录-->
+			<!--
+			<div class="other-login-wrap">
+			<div class="other-login-lable">还可选择以下方式登陆</div>
+			<div class="other-login">
+			<div class="sina" onclick="apiLogin('weibo')">
+			<span class="sina-label">新浪微博</span>
+			</div>
+			<div id="qqLoginBtn"  class="qq" onclick="apiLogin('qq');">
+			<span class="qq-label">QQ</span>
+			</div>
+			<div class="weixin" onclick="apiLogin('weixin');">
+			<span class="weixin-label">微信登陆</span>
+			</div>
+			</div>
+			</div>
+			-->
+		</div>
+		<footer>
+			<div>
+				没有账号？
+			</div>
+			<div class="fast-reg" tapmode="" onclick="toSet('userRegister','注册','frm_userRegister.html')">
+				立即注册
+			</div>
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js"></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		//找回密码、注册
+		function toSet(frmName, frmTitle, frmUrl) {
+			api.openWin({
+				name : 'commonHome' + frmName,
+				url : 'win_commonHomeTitle.html',
+				pageParam : {
+					bannerName : frmName,
+					bannerTitle : frmTitle,
+					bannerTag : frmName,
+					bannerUrl : frmUrl
+				},
+				bounces : false,
+				vScrollBarEnabled : false,
+				hScrollBarEnabled : false,
+				reload : true
+			});
+		}
+
+		//用户手机账号登录
+		function login() {
+			var cellPhoneNum = $("#cellPhoneNum").val();
+			var pwd = $("#pwd").val();
+			if (validForm()) {
+				var userUrl = ajaxAgent.serverAction + '/app/user/login';
+				api.showProgress();
+				api.ajax({
+					url : userUrl,
+					method : 'post',
+					timeout : 30,
+					dataType : 'json',
+					returnAll : false,
+					data : {
+						values : {
+							cellPhoneNum : cellPhoneNum,
+							pwd : pwd
+						}
+					}
+				}, function(ret, err) {
+					if (ret && ret.result == 1) {//登录成功
+						var nickName = utilsFuncs.tranUnicode2Chn(ret.nikeName);
+						var userEntity = {
+							userId : ret.userId,
+							userName : ret.cellPhoneNum,
+							cellPhone : ret.cellPhoneNum,
+							nickName : nickName,
+							headImgPath : ret.headImgPath,
+							invitidNum : ret.shareCode
+						};
+						sessionAgent.setLoginInfo(userEntity);
+						api.execScript({
+							name : 'commonMainuser',
+							frameName : 'user',
+							script : 'checkUserId()'
+						});
+						api.closeWin();
+					} else if (ret && ret.result != 1) {//登录失败 错误信息
+						api.alert({
+							msg : ret.msg
+						});
+					} else {
+						utilsFuncs.toastNetErr();
+					}
+				});
+				api.hideProgress();
+			}
+		}
+
+		//验证表单
+		function validForm() {
+			var checkRs = true;
+			$(".formIpt").each(function(index) {
+				var validSeq = $(this).attr("validType");
+				if (validSeq != null && validSeq != "") {
+					var validArray = validSeq.split(",");
+					for (var i = 0, len = validArray.length; i < len; i++) {
+						if (!validFuncs[validArray[i]]($(this).val())) {
+							checkRs = false;
+						}
+					}
+				}
+			});
+			if (!(validFuncs.checkCellPhone($("#cellPhoneNum").val()))) {
+				checkRs = false;
+			}
+			return checkRs;
+		}
+	</script>
+</html>

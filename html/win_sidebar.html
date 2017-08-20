@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<style>
+			body, html {
+				height: 100%;
+			}
+			body {
+				padding-left: 1%;
+				background-color: #1D1D1D;
+			}
+			.category {
+				padding-top: 20px;
+				background-color: #1D1D1D;
+			}
+			.category li {
+				position: relative;
+				padding-left: 36px;
+				padding-top: 12px;
+				padding-bottom: 12px;
+				padding-right: 6px;
+				background-size: 30px;
+				background-repeat: no-repeat;
+				background-position: 5px center;
+				border-bottom-width: 1px;
+				border-bottom-style: solid;
+				border-bottom-color: #323237;
+			}
+			.category span {
+				color: #777676;
+				padding-left: 5%;
+				font-size: 18px;
+			}
+			.selMenu {
+				background-color: #424242;
+			}
+			.menuindex {
+				background-image: url('../image/menu_index.png');
+			}
+			.menusearch {
+				background-image: url('../image/pluginboard_icon_search@2x.png');
+				background-position-x: left;
+			}
+			.menuhd {
+				background-image: url('../image/menu_hd.png');
+				background-position-x: left;
+			}
+			.menucollection {
+				background-image: url('../image/menu_collection.png');
+				background-position-x: left;
+			}
+			.menubook {
+				background-image: url('../image/menu_books.png');
+				background-position-x: left;
+			}
+			.menuclear {
+				background-image: url('../image/menu_clearCache.png');
+				background-position-x: left;
+			}
+			.menuabout {
+				background-image: url('../image/menu_aboutUs.png');
+				background-position-x: left;
+			}
+			.menuversion {
+				background-image: url('../image/menu_curVersion.png');
+				background-position-x: left;
+			}
+			.crowdFundation {
+				background-image: url('../image/crowdFundation.png');
+				background-position-x: left;
+			}
+			.brokeNews {
+				background-image: url('../image/brokeNews.png');
+				background-position-x: left;
+			}
+			.feedback {
+				background-image: url('../image/feedback.png');
+				background-position-x: left;
+			}
+			.dataNews {
+				background-image: url('../image/dataNews.png');
+				background-position-x: left;
+			}
+			.smlImgRead {
+				background-image: url('../image/smlRead.png');
+				background-position-x: left;
+			}
+		</style>
+	</head>
+	<body>
+		<ul class="category">
+			<li tapmode="selMenu" class="menuindex" onclick="menuClk('index', this)">
+				<span>首页</span>
+			</li>
+			<!--
+			<li tapmode="selMenu" class="menuversion" onclick="menuClk('getVersion', this)">
+			<span>当前版本(2.0)</span>
+			</li>
+			-->
+			<li tapmode="selMenu" class="feedback" onclick="menuClk('feedback', '用户反馈','frm_userFeedBack.html')">
+				<span>用户反馈</span>
+			</li>
+			<li tapmode="selMenu" class="menuabout" onclick="menuClk('aboutUs', '关于我们','frm_userAbout.html')">
+				<span>关于我们</span>
+			</li>
+		</ul>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/zepto.min.js"></script>
+		<script type="text/javascript" src="../script/funcTools.js"></script>
+		<script type="text/javascript" src="../script/sessions.js"></script>
+		<script type="text/javascript">
+			var cacheSize = 0;
+			apiready = function() {
+				api.getCacheSize(function(ret, err) {
+					cacheSize = (parseInt(ret.size) / 1024) / 1024;
+					cacheSize = cacheSize.toFixed(2);
+					$("#cacheSpan").text($("#cacheSpan").text() + '(' + cacheSize + 'M)');
+				});
+			};
+			function closeWin() {
+				api.closeWin({ });
+			}
+
+			function menuClk(frmName, frmTitle, frmUrl) {
+				if("index" == frmName){
+					api.execScript({
+						name : 'main',
+						script : 'random(0)'
+					});
+				}else{
+					api.openWin({
+						name : 'commonHome' + frmName,
+						url : 'win_commonHomeTitle.html',
+						pageParam : {
+							bannerName : frmName,
+							bannerTitle : frmTitle,
+							bannerTag : frmName,
+							bannerUrl : frmUrl
+						},
+						bounces : false,
+						vScrollBarEnabled : false,
+						hScrollBarEnabled : false,
+						reload : true
+					});
+				}		
+			}
+		</script>
+	</body>
+</html>

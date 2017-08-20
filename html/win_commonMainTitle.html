@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>前台公用头部</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	</head>
+	<body>
+		<div class="wrap">
+			<header class="header">
+				<div class="topbar whitebar">
+					<div class="back" tapmode onclick="goBack()"><img src="../image/ic_back.png"></div>
+					<div class="title" id="bannerTitle"></div>
+				</div>
+			</header>
+			<div class="main"></div>
+			<footer class="footer">
+				<ul>
+					<li onclick="random('index')"><a class="bottom_btn home">首页</a></li>
+					<li tapmode="active" onclick="random('news','新闻资讯','frm_newsList.html')"><a class="bottom_btn news">资讯</a></li>
+					<li tapmode="active" onclick="random('free','免费数据','frm_freeList.html')"><a class="bottom_btn free">免费</a></li>
+					<li tapmode="active" onclick="random('user','个人中心','frm_userIndex.html')"><a class="bottom_btn user">我的</a></li>
+				</ul>
+			</footer>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js"></script>
+	<script type="text/javascript">
+		apiready = function(){
+			fixIos7Bar($("header"));
+			api.setStatusBarStyle({
+				style : 'light'
+			});
+			$("#bannerTitle").text(api.pageParam.bannerTitle);
+			$("." + api.pageParam.bannerName).parent().addClass("active");
+
+			openMenus();
+		}
+
+		//获取新闻、免费数据、个人中心数据
+		function openMenus(){
+			var body_h = $api.offset($api.dom('body')).h;
+			var header_h = $api.offset($api.dom('header')).h;
+			var footer_h = $api.offset($api.dom('footer')).h;
+			var rect_h = body_h - header_h - footer_h;
+			
+			api.openFrame({
+				name : api.pageParam.bannerName,
+				url : api.pageParam.bannerUrl,
+				rect : {
+					x : 0,
+					y : header_h,
+					w : 'auto',
+					h : rect_h
+				},
+				bounces : false,
+				delay : 100,
+				reload : true
+			});
+		}
+
+		//底部菜单切换
+		function random(frmName,frmTitle,frmUrl) {
+			if (('index' == frmName)) {
+				api.closeToWin({
+					name : 'main'
+				});
+			} else {
+				api.openWin({
+					name : 'commonMain'+frmName,
+					url : 'win_commonMainTitle.html',
+					pageParam : {
+						bannerName : frmName,
+						bannerTitle : frmTitle,
+						bannerUrl : frmUrl
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		}
+	</script>
+</html>

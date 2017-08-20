@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>前台公用头部</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			.switch {
+				text-align: center;
+			}
+			.switch span {
+				padding: 15px 0px;
+				width: 50%;
+				font-size: 17px;
+				color: #000;
+				background-color: #fff;
+			}
+			.switch .left {
+			}
+			.switch .right {
+			}
+			.switch .active {
+				border-bottom: solid 3px #ffa75e;
+			}
+			.content{display: none;}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<header class="header">
+				<div class="topbar whitebar">
+					<div class="back" tapmode onclick="goBack()"><img src="../image/ic_back.png"></div>
+					<div class="title" id="bannerTitle"></div>
+				</div>
+			</header>
+			<!--我要接单头部-->
+			<div class="content" id="content">
+				<div class="switch" id="switch">
+					<span class="left switchbnt active" tapmode="" onclick="openList(1)" id="switch1">浏览数据</span><span class="right switchbnt" tapmode="" onclick="openList(2)" id="switch2">数据大咖</span>
+				</div>
+			</div>
+			<div class="main"></div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js"></script>
+	<script type="text/javascript">
+		apiready = function(){
+			fixIos7Bar($("header"));
+			api.setStatusBarStyle({
+				style : 'light'
+			});
+			$("#bannerTitle").text(api.pageParam.bannerTitle);
+			//频道、我要接单头部显示菜单
+			if("channelList" == api.pageParam.bannerTag){
+				$(".content").css("display", "block");
+			}
+			openMenus();
+		}
+
+		
+		function openMenus(){
+			var header_h = $api.offset($api.dom('header')).h;
+			//频道、我要接单头部距离
+			if("channelList" == api.pageParam.bannerTag){
+				var channel_h = $api.offset($api.byId('content')).h;
+				var rect_h =  header_h + channel_h; 
+			}else{
+				var rect_h = header_h;
+			}
+			
+			api.openFrame({
+				name : api.pageParam.bannerName,
+				url : api.pageParam.bannerUrl,
+				rect : {
+					x : 0,
+					y : rect_h,
+					w : 'auto',
+					h : 'auto'
+				},
+				pageParam : api.pageParam,
+				bounces : false,
+				delay : 100,
+				reload : true
+			});
+		}
+
+		//频道、我要接单菜单切换
+		function openList(tabType){
+			$(".switchbnt").removeClass("active");
+			$("#switch" + tabType).addClass("active");
+			if(2 == tabType){
+				$("#bannerTitle").text("我要接单");
+				frmName = 'orderList';
+				frmUrl = 'frm_orderList.html';
+			}else{
+				$("#bannerTitle").text(api.pageParam.bannerTitle);
+				frmName = api.pageParam.bannerName;
+ 				frmUrl = 'frm_channelList.html';
+			}
+			api.pageParam.bannerName = frmName;
+			api.pageParam.bannerUrl = frmUrl;
+			openMenus();
+		}
+	</script>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>frame</title>
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			html, body {
+				width: 100%;
+				min-height: 100%;
+				background: #e5e5e5;
+			}
+			.h80 {
+				height: 80px;
+			}
+			.h40 {
+				height: 40px;
+			}
+			.h20 {
+				height: 20px;
+			}
+			.h10 {
+				height: 10px;
+				background: #e5e5e5;
+			}
+			.h1 {
+				height: 1px;
+				margin-left: 15px;
+				background: #e5e5e5;
+			}
+			.fr {
+				float: right;
+			}
+			.fl {
+				float: left;
+			}
+			.hightitem {
+				background-color: #fff;
+			}
+			.inwrap {
+				padding-right: 15px;
+				padding-left: 15px;
+			}
+			/* 2. 价格样式 */
+			.line {
+				height: 10px;
+				line-height: 5px;
+				border-bottom: 1px solid #ccc;
+			}
+			.priceitem {
+				height: 200px;
+				line-height: 60px;
+				border-bottom: 1px solid #ccc;
+			}
+			.priceitem .price, .priceitem .symbol {
+				color: #6ab494;
+			}
+			.priceitem .price {
+				font-size: 20px;
+				margin-top: 30px;
+			}
+			.priceitem .o-price {
+				font-size: 12px;
+				color: #666;
+			}
+			.priceitem .buynow {
+				float: left;
+				background-color: #6ab494;
+				color: #fff;
+				height: 25px;
+				line-height: 25px;
+				border-radius: 3px;
+				padding: 10px 20px;
+				margin-top: 30px;
+				margin-right: 30px;
+			}
+			/* 6. */
+			.tuanitemnoline {
+				height: 50px;
+				line-height: 50px;
+				font-size: 14px;
+			}
+			.tuanitemnoline .tuan03 {
+				float: right;
+				width: 60px;
+				font-size: 14px;
+			}
+			.tuanitem {
+				height: 50px;
+				line-height: 50px;
+				font-size: 14px;
+				border-bottom: 1px solid #e0e0e0;
+			}
+			.tuanitem .tuan02, .tuanitem .tuan03, .tuantotalprice .totalprice01, .tuantotalprice .totalprice02, .tuanrealprice .realprice01, .tuanrealprice .realprice02 {
+				float: right;
+				width: 50px;
+				font-size: 14px;
+			}
+			.tuantotalprice {
+				margin-top: 10px;
+			}
+			.tuantotalprice, .tuanrealprice {
+				height: 30px;
+			}
+			.tuanrealprice .realprice02 {
+				font-size: 16px;
+				color: #6ab494;
+			}
+			.tuanitem .tuan03, .tuantotalprice .totalprice02, .tuanrealprice .realprice02 {
+				text-align: right;
+			}
+			.smallitem .averageprice {
+				float: right;
+			}
+			.smallitem {
+				height: 20px;
+				line-height: 20px;
+				font-size: 14px;
+			}
+			.recommandtitle {
+				line-height: 25px;
+				font-size: 14px;
+				color: #666;
+			}
+			.recommanddish {
+				line-height: 22px;
+				font-size: 14px;
+			}
+			.moredetail {
+				height: 50px;
+				line-height: 50px;
+				font-size: 14px;
+				border-top: 1px solid #e0e0e0;
+			}
+			.lastitem {
+				padding-bottom: 10px;
+			}
+			.presshover {
+				background-color: #FAFAFA;
+			}
+			.buyhover {
+				background: rgba(252, 85, 0, 0.6);
+			}
+			.swipe {
+				width: 100%;
+				background-color: #fff;
+				overflow: hidden;
+				position: relative;
+			}
+			.swipe-wrap {
+				overflow: hidden;
+				position: relative;
+			}
+			.swipe-wrap .swipe-box {
+				float: left;
+				width: 100%;
+				position: relative;
+			}
+			.swipe-box img {
+				width: 100%;
+			}
+			.formIpt {
+				border: 1px solid #6ab494;
+			}
+			.hightitem li {
+				list-style: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 6 团购详情 -->
+		<div class="tuandetail hightitem inwrap">
+			<div class="tuanitemnoline">
+				<span class="tuan01">账户余额</span>
+				<span class="tuan03" id="usableMoney">0.04元</span>
+			</div>
+			<!--
+			<div class="tuanitemnoline">
+			<span class="tuan01">代收金额</span>
+			<span class="tuan03" id="readyMoney">0元</span>
+			</div>
+			<div class="tuanitem">
+			<span class="tuan01">冻结金额</span>
+			<span class="tuan03" id="blockedMoney">0元</span>
+			</div>
+			<div class="tuantotalprice">
+			<span class="totalprice02" id="countMoney">0元</span>
+			<span class="totalprice01">总价值</span>
+			</div>
+			-->
+		</div>
+		<!-- 2. 价格样式 -->
+		<div class="line hightitem inwrap"></div>
+		<!--
+		<div class="priceitem hightitem inwrap">
+		<span class="price">
+		<input type="text" class="formIpt" validType="checkNull" placeholder="请输入充值金额"  id="payMount" value="">
+		</span>
+		<li><input type="radio" name="buyType" value="1" checked>支付宝充值</li>
+		<li><input type="radio" name="buyType" value="2">微信充值</li>
+		<div class="buynow fr" tapmode="buyhover" onclick="pay()">立即充值</div>
+		</div>
+		-->
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js"></script>
+	<script type="text/javascript" src="../script/funcTools.js"></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			getUserInfoMount();
+		}
+		//获取用户账户信息
+		function getUserInfoMount() {
+			var userEntity = sessionAgent.getLoginInfo();
+			var userId = userEntity.userId;
+			var userInfoUrl = ajaxAgent.serverAction + '/app/account/balance';
+			api.ajax({
+				async : false,
+				url : userInfoUrl,
+				method : 'post',
+				timeout : 50,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						userId : userId
+					}
+				}
+			}, function(ret, err) {
+				if (ret.result == 1) {
+					var usableMoney = parseFloat(ret.usableMoney);
+					var readyMoney = parseFloat(ret.readyMoney);
+					var blockedMoney = parseFloat(ret.blockedMoney);
+					var countMoney = usableMoney + readyMoney + blockedMoney;
+					$("#usableMoney").text(usableMoney + '元');
+					$("#readyMoney").text(readyMoney + '元');
+					$("#blockedMoney").text(blockedMoney + '元');
+					$("#countMoney").text(countMoney + '元');
+				}
+			});
+		}
+
+		function pay() {
+			var amount = $("#payMount").val();
+			var t = /^\d+(\.\d+)?$/;
+			if (!t.test(amount) || amount == null || amount == '') {
+				api.toast({
+					msg : '请输入正确的金额',
+					duration : 1000,
+					location : 'middle'
+				});
+				return false;
+			}
+			var payment = $('input:radio:checked').val();
+			var subject = '会员充值';
+			var body = '用户账户充值';
+			var tradeNO = getTradeNO();
+			var notifyURL = ajaxAgent.serverAction + '/userCenter/recharge';
+			if (payment == 1) {//支付宝充值
+				var aliPay = api.require('aliPay');
+				aliPay.config({
+					notifyURL : notifyURL
+				}, function(ret, err) {
+					if (ret.status) {
+						aliPay.pay({
+							subject : subject,
+							body : body,
+							amount : amount,
+							tradeNO : tradeNO
+						}, function(ret2, err2) {
+							if (ret2.code == '9000') {
+								api.alert({
+									msg : '支付成功！'
+								});
+								getUserInfoMount();
+							} else {
+								api.alert({
+									msg : '支付失败'
+								});
+							}
+						});
+					} else {
+						alert('商户配置信息错误');
+					}
+				})
+			} else {//微信充值
+				var wxPay = api.require('wxPay');
+				wxPay.config({
+					apiKey : 'wx707b3bb40a1547f1',
+					mchId : '1280351601',
+					partnerKey : 'l2t3h9d1a2t3a5t8r13a21d34i55n89g',
+					notifyUrl : notifyURL
+				}, function(ret, err) {
+					if (ret.status) {
+						wxPay.pay({
+							description : subject,
+							detail : body,
+							totalFee : (amount) * 100,
+							tradeNo : tradeNO
+						}, function(ret2, err2) {
+							if (ret2.status) {
+								api.alert({
+									msg : '支付成功！'
+								});
+								getUserInfoMount();
+							} else {
+								api.alert({
+									msg : '支付失败'
+								});
+							}
+						});
+					} else {
+						alert('商户配置信息错误');
+					}
+				});
+			}
+		}
+
+		function getTradeNO() {
+			var myDate = new Date();
+			var TradeNO = myDate.getFullYear();
+			TradeNO += myDate.getMonth();
+			TradeNO += myDate.getDate();
+			TradeNO += myDate.getHours();
+			TradeNO += myDate.getMinutes();
+			TradeNO += myDate.getTime();
+			return TradeNO;
+		}
+	</script>
+</html>

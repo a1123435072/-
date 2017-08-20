@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>系统设置</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui.min.css" />
+		<style>
+			.aui-tab-border {
+				border-color: #2980b9 !important;
+			}
+			.aui-tab-nav.aui-tab-border li {
+				color: #2980b9;
+				border-color: #2980b9;
+				border-left: 1px solid #2980b9;
+			}
+			.aui-tab-nav.aui-tab-border li.active {
+				background-color: #2980b9 !important;
+			}
+			.aui-switch:checked {
+				border-color: #2980b9;
+				box-shadow: #2980b9 0 0 0 26px inset;
+				background-color: #2980b9;
+			}
+		</style>
+	</head>
+	<style type="text/css">
+	</style>
+	<body>
+		<!--<p class="aui-padded-10">css3模拟switch动画效果，默认设置了几个颜色供大家选择，行高为26px；</p>-->
+		<div class="aui-content">
+			<ul class="aui-list-view">
+				<li class="aui-list-view-cell aui-switch-body">
+					<div class="aui-switch-title">
+						智能无图模式
+					</div>
+					<input tapmode="" id="chkImgType" type="checkbox" class="aui-switch aui-pull-right">
+				</li>
+				<li class="aui-list-view-cell aui-switch-body">
+					<div class="aui-switch-title">
+						夜间模式
+					</div>
+					<input tapmode="" id="isNightStyle" type="checkbox" class="aui-switch aui-pull-right">
+				</li>
+				<li class="aui-list-view-cell aui-switch-body">
+					<div class="aui-switch-title">
+						正文字体
+					</div>
+					<ul tapmode="" class="aui-tab-nav aui-tab-border" id="swichLi">
+						<li value="0">
+							小号
+						</li>
+						<li class="active" value="1">
+							正常
+						</li>
+						<li value="2">
+							大号
+						</li>
+						<li value="3">
+							特大
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div>
+				<div class="aui-content">
+					<ul class="aui-list-view">
+						<li class="aui-list-view-cell aui-switch-body" tapmode="" onclick="clearCache();">
+							<div class="aui-switch-title aui-iconfont aui-icon-delete">
+								清理缓存
+							</div>
+							<span id="curCacheNum" class="aui-pull-right"></span>
+						</li>
+						<!--
+						<li id="scoreLi" class="aui-list-view-cell aui-switch-body" style="display: none;" tapmode="" onclick="toScorePage();">
+						<div class="aui-switch-title aui-iconfont aui-icon-mark">
+						去App Store评分
+						</div>
+						</li>
+						-->
+					</ul>
+				</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js" ></script>
+	<script type="text/javascript">
+		function setRefFunc() {
+			api.execScript({
+				name : 'systemSet',
+				script : "setExecFunc(function(){api.sendEvent({name: 'refCurFrame', extra: {}});});"
+			});
+			api.sendEvent({
+				name : 'refSysSetting',
+				extra : {}
+			});
+		}
+
+		function toScorePage() {
+			api.openApp({
+				iosUrl : 'https://itunes.apple.com/cn/app/jiu-pai/id1039821793'
+			}, function(ret, err) {
+			});
+		}
+
+		function clearCache() {
+			api.showProgress({
+				model : false
+			});
+			api.clearCache(function(ret, err) {
+				$api.byId("curCacheNum").innerText = '0 Mb';
+				api.hideProgress();
+				api.toast({
+					msg : '清除缓存完成',
+					duration : 2000,
+					location : 'middle'
+				});
+			});
+		}
+
+		apiready = function() {
+			var systemSetting = sessionAgent.getStorage(sessionAgent.keyMap.systemSetKey), swich = $api.domAll("#swichLi li");
+			if (systemSetting == null || systemSetting == "") {
+				systemSetting = {
+					fontSize : 1
+				};
+				$api.addCls(swich[1], 'active');
+			} else {
+				if (systemSetting.checkImgType == 'true') {
+					var checkIpt = $api.byId('chkImgType');
+					checkIpt.checked = true;
+				}
+				if (systemSetting.isNightStyle == 'true') {
+					var nStyleIpt = $api.byId('isNightStyle');
+					nStyleIpt.checked = true;
+				}
+				if (isNaN(parseInt(systemSetting.fontSize))) {
+					systemSetting.fontSize = 1;
+				}
+				for (var j in swich) {
+					if ($api.attr(swich[j], 'value') == systemSetting.fontSize && $api.attr(swich[j], 'value') != "") {
+						$api.removeCls($api.dom("#swichLi li.active"), 'active');
+						$api.addCls(swich[j], 'active');
+					}
+				}
+			}
+			for (var i in swich) {
+				$api.addEvt(swich[i], 'click', function() {
+					$api.removeCls($api.dom("#swichLi li.active"), 'active');
+					$api.addCls(this, 'active');
+					systemSetting.fontSize = $api.attr(this, 'value');
+					sessionAgent.setStorage(sessionAgent.keyMap.systemSetKey, systemSetting);
+					setRefFunc();
+				});
+			}
+			$api.addEvt($api.byId('chkImgType'), 'click', function() {
+				systemSetting.checkImgType = this.checked + '';
+				sessionAgent.setStorage(sessionAgent.keyMap.systemSetKey, systemSetting);
+				setRefFunc();
+			});
+			$api.addEvt($api.byId('isNightStyle'), 'click', function() {
+				systemSetting.isNightStyle = this.checked + '';
+				sessionAgent.setStorage(sessionAgent.keyMap.systemSetKey, systemSetting);
+				setRefFunc();
+			});
+			if (api.systemType == 'ios') {
+				$api.byId('scoreLi').style.display = '';
+			}
+			api.getCacheSize(function(ret, err) {
+				cacheSize = (parseInt(ret.size) / 1024) / 1024;
+				cacheSize = cacheSize.toFixed(2);
+				$api.byId("curCacheNum").innerText = cacheSize + ' Mb';
+			});
+		}
+	</script>
+</html>

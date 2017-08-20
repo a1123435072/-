@@ -1,0 +1,167 @@
+html,body{
+	height: 100%;
+	width:100%;
+}
+body{ background:#f6f6f6;　font: normal 14px Helvetica, Arial, sans-serif;}
+.wrap{
+    height: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-flex-flow: column;
+           flex-flow: column;
+}
+.header{
+    text-align: center; background-color: #3087d0; color: #fff;
+    width: 100%;position:relative;
+}
+.header h1{
+    font-size: 20px; height: 45px; line-height: 45px; margin: 0em; color: #fff;
+}
+
+.topbar {
+				background: #3087d0;
+				height: 45px;
+				border-bottom: 1px solid #3087d0;
+				position: relative;
+			}
+			.whitebar {
+				background-color: #3087d0;
+			}
+			.back {
+				float: left;
+			}
+			.back img {
+				height: 23px;
+				margin-top: 13px;
+				margin-left: 30px;
+			}
+			.topbar .title {
+				line-height: 45px;
+				text-align: center;
+				font-size: 20px;
+				color: #fff;
+			}
+.main{
+    -webkit-box-flex: 1; 
+    -webkit-flex: 1;
+    flex: 1;
+}
+.footer{
+    width: 100%;
+    text-align: center;
+}
+.footer h5{
+    color: white;
+}
+.con{font-size: 28px; text-align: center;}
+.fl{ float:left;}
+.fr{ float:right;}
+.empty{height:15px;}
+
+/*底部样式*/
+			.footer {
+				background: #3087d0;
+				height: 48px;
+				border-top: solid 2px #50a7f0;
+				line-height: 48px;
+				width: 100%;
+				text-align: center;
+			}
+			.footer ul {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+			}
+			.footer li {
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				height: 48px;
+				width: 24.8%;
+			}
+			.footer ul li.foot_line {
+				width: 1px !important;
+				border-right: solid 1px #043864;
+				background: #66b9ff;
+			}
+			/*选项卡样式*/
+			.scrollbar {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				text-align: center;
+				height: 40px;
+				line-height: 40px;
+				background: #EBECF0;
+				font-size: 12px;
+				position: relative;
+			}
+			.col1 {
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				color: #909090;
+			}
+			.indexbar {
+				position: absolute;/*background: #0fc;*/
+				width: 50%;
+				height: 5px;
+				left: 0px;
+				bottom: 0px;
+				-webkit-transition: 300ms;
+			}
+			.redbox {
+				background: #DB4646;
+				width: 40px;
+				height: 5px;
+				position: relative;
+				left: auto;
+				right: auto;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.home {
+				background-image: url(../image/footIcon-01.png);
+			}
+			.news {
+				background-image: url(../image/footIcon-02.png);
+			}
+			.free {
+				background-image: url(../image/footIcon-03.png);
+			}
+			.user {
+				background-image: url(../image/footIcon-04.png);
+			}
+			.bottom_btn {
+				background-position-y: 7px;
+				font-size: 14px;
+				color: #fff;
+				width: 100%;
+				height: 48px;
+				line-height: 68px;
+				background-repeat: no-repeat no-repeat;
+				background-position-x: center;
+				background-size: 20px;
+			}
+			.active .cloud {
+				background-image: url(../image/footIcon-01.png);
+			}
+			.active .client {
+				background-image: url(../image/footIcon-02.png);
+			}
+			.active .dev {
+				background-image: url(../image/footIcon-03.png);
+			}
+			.active .doc {
+				background-image: url(../image/footIcon-04.png);
+			}
+			.active .bottom_btn {
+				color: #fff;
+				background-size: 20px;
+				background-color: #1c71b8;
+			}
+			.bottomhover {
+				background-color: #46494B;
+			}

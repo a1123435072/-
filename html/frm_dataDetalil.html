@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>数据详情</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style>
+			html, body {
+				width: 100%;
+				min-height: 100%;
+				background: #f6f6f6;
+			}
+			.h80 {
+				height: 80px;
+			}
+			.h40 {
+				height: 40px;
+			}
+			.h20 {
+				height: 10px;
+			}
+			.h10 {
+				height: 10px;
+				background: #e5e5e5;
+			}
+			.h1 {
+				height: 1px;
+				margin-left: 15px;
+				margin-right: 15px;
+				background: #e5e5e5;
+			}
+			.fr {
+				float: right;
+			}
+			.fl {
+				float: left;
+			}
+			.hightitem {
+				border-bottom: solid 1px #e4e4e4;
+				border-top: solid 1px #e4e4e4;
+				color: #666;
+				background: #fff;
+			}
+			.inwrap {
+				padding-right: 25px;
+				padding-left: 25px;
+			}
+			/* 2. 价格样式 */
+			.priceitem {
+				height: 60px;
+				line-height: 60px;
+				background: #fff;
+			}
+			.priceitem .price, .priceitem .symbol {
+				color: #EC971F;
+			}
+			.priceitem .price {
+				font-size: 20px;
+			}
+			.priceitem .o-price {
+				font-size: 12px;
+				color: #666;
+			}
+			.priceitem .buynow {
+				background-color: #3087d0;
+				color: #fff;
+				height: 25px;
+				line-height: 25px;
+				border-radius: 3px;
+				padding: 10px 20px;
+				margin-top: 7px;
+			}
+			/* 3. */
+			.brief {
+			}
+			.brief .title {
+				line-height: 25px;
+				font-size: 17px;
+				padding: 10px 0;
+				color: #333;
+			}
+			.brief .describe {
+				color: #666;
+				font-size: 16px;
+				line-height: 30px;
+				padding: 10px 0;
+			}
+			.brief .ico {
+				height: 30px;
+				line-height: 30px;
+				font-size: 14px;
+				color: #666;
+			}
+			.brief .ico img {
+				height: 14px;
+			}
+			/* 4. */
+			.goodcomment {
+				height: 50px;
+				line-height: 50px;
+				font-size: 14px;
+			}
+			.goodcomment img {
+				height: 20px;
+				padding-right: 5px;
+				margin-top: 16px;
+			}
+			.goodcomment .arrow {
+				float: right;
+				height: 20px;
+				padding-top: 15px;
+			}
+			.goodcomment .commentnum {
+				font-size: 15px;
+				color: #EC971F;
+				padding: 0 10px;
+				float: right;
+				margin-top: 10px;
+				border: solid 1px #EC971F;
+				line-height: 28px;
+				border-radius: 5px;
+			}
+			/* 5. */
+			.darktitle {
+				height: 30px;
+				line-height: 30px;
+				font-size: 16px;
+				color: #666;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+			.shopinfo {
+				line-height: 25px;
+				font-size: 16px;
+				padding: 10px;
+				color: #666;
+			}
+			/* 6. */
+			.tuantotalprice {
+				margin-top: 10px;
+			}
+			.tuan03 {
+				color: #EC971F;
+				font-size: 28px !important;
+			}
+			.tuantotalprice, .tuanrealprice {
+				height: 30px;
+			}
+			.tuanrealprice .realprice02 {
+				font-size: 16px;
+				color: #6ab494;
+			}
+			.tuanitem .tuan03, .tuantotalprice .totalprice02, .tuanrealprice .realprice02 {
+				text-align: right;
+			}
+			.presshover {
+				background-color: #FAFAFA;
+			}
+			.buyhover {
+				background: rgba(252, 85, 0, 0.6);
+			}
+			.swipe {
+				width: 100%;
+				background-color: #fff;
+				overflow: hidden;
+				position: relative;
+			}
+			.swipe-wrap {
+				overflow: hidden;
+				position: relative;
+			}
+			.swipe-wrap .swipe-box {
+				width: 100%;
+				position: relative;
+				/*非IE的主流浏览器识别的垂直居中的方法*/
+				display: table-cell;
+				vertical-align: middle;
+				/*设置水平居中*/
+				text-align: center;
+				/* 针对IE的Hack */
+				*display: block;
+				*font-size: 97%;/*约为高度的0.873，200*0.873 约为175*/
+				*font-family: Arial;/*防止非utf-8引起的hack失效问题，如gbk编码*/
+				height: 233px;
+			}
+			.swipe-box img {
+				vertical-align: middle;
+				max-width: 100%;
+			}
+			/*列表样式*/
+			.listDataBox {
+				width: 90%;
+				margin: 0 5%;
+			}
+			.listDataBox li {
+				width: 100%;
+				position: relative;
+				float: left;
+				border-bottom: solid 1px #e3e3e3;
+				padding: 10px 0;
+			}
+			/*列表图片*/
+			.hotImageBox {
+				width: 75px;
+				height: 75px;
+			}
+			.hotImageBox img {
+				width: 100%;
+				height: 100%;
+				float: left;
+			}
+			/*列表标题数据类型收费*/
+			.hotWordBox {
+				margin: -13px 0px 0 95px;
+			}
+			.hotwordH2 {
+				font-size: 16px;
+				font-weight: normal;
+				color: #333
+			}
+			.hotWordBox em {
+				height: 25px;
+				float: left;
+				margin: 10px 0px 0px 10px;
+			}
+			.hotWordBox em img {
+				height: 100%;
+			}
+			.hotWordBox div {
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+			.hotWordBox div span {
+				padding: 5px 0px;
+				color: #444;
+				font-size: 15px;
+			}
+			.hotWordBox div i {
+				color: #3087d0;
+				font-style: normal;
+				margin-left: 5px;
+			}
+			/*列表按钮*/
+			.hotBtn {
+				padding: 10% 0 0 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 2;
+			}
+			.hotBtn span {
+				width: 45px;
+				height: 45px;
+				line-height: 45px;
+				border: solid 1px #c8c8c8;
+				background: #fff;
+				text-align: center;
+				border-radius: 56px;
+			}
+			.hotBtn span a {
+				color: #2f98e0;
+				font-size: 2.8em;
+			}
+			.hotBtn .listHoverBtn {
+				background: #2f98e0;
+				border: solid 1px #fff;
+			}
+			.listHoverBtn a {
+				color: #fff;
+			}
+			.freeBtn {
+				border: solid 1px #ccc;
+				background: #fff !important;
+				color: #666 !important;
+				border-radius: 3px;
+				padding: 0 5px;
+				margin-top: 15px;
+			}
+			.fontSize14 {
+				font-size: 14px;
+				margin-top: 15px;
+				color: #777;
+			}
+			.fontColor {
+				font-size: 14px;
+				margin-top: 12px;
+				color: #3087d0;
+				margin-left: 10px;
+			}
+			/*加载更多*/
+			.LoadMore {
+				width: 100%;
+				padding: 10px 0;
+				background: #e9e9e9;
+				text-align: center;
+				border-bottom: solid 1px #f2f2f2;
+			}
+			.LoadMore a {
+				color: #646464;
+			}
+			.empty5 {
+				height: 5px;
+			}
+			/*免费按钮*/
+			.freeBtn {
+				border: solid 1px #ccc;
+				background: #fff !important;
+				color: #666 !important;
+			}
+			.firstblock, .secondblock, .thirdblock {
+				background-color: #fff;
+				border-bottom: solid 1px #e4e4e4;
+				border-top: solid 1px #e4e4e4;
+			}
+			.item {
+				height: 30px;
+				line-height: 30px;
+				padding-left: 15px;
+				padding-right: 15px;
+				background-color: #fff;
+			}
+			.item02 {
+				height: 50px;
+				line-height: 50px;
+				padding-left: 15px;
+				padding-right: 15px;
+				background-color: #fff;
+			}
+			.h2 {
+				height: 1px;
+				background: #f0f0f0;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<!-- 1. 头部swipe -->
+		<div id="datails"></div>
+		<!-- 小伙伴 -->
+		<div class="darktitle inwrap">
+			小伙伴们还看了
+		</div>
+		<div class="othertuan hightitem" tapmode="presshover">
+			<ul class="listDataBox"></ul>
+			<ul style="clear: both"></ul>
+			<div class="empty"></div>
+		</div>
+		<div class="h20"></div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js" ></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		var page = 1;
+		apiready = function() {
+			render();
+			setRefreshHeader();
+			api.addEventListener({
+				name : 'scrolltobottom'
+			}, function(ret, err) {
+				page++;
+				getList();
+				api.parseTapmode();
+			});
+		}
+		function render() {
+			api.showProgress();
+			getDetails();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//获取数据详情
+		function getDetails() {
+			var getDetalUrl = ajaxAgent.serverAction + '/app/channelData/detail';
+			api.ajax({
+				async : false,
+				url : getDetalUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						artId : api.pageParam.articleId
+					}
+				}
+			}, function(ret, err) {
+				if (ret.detail) {
+					var data = ret.detail;
+					var dataHtml = '';
+					dataHtml += '<div class="priceitem inwrap"><span class="symbol">¥</span>';
+					if (data.is_free == 1) {
+						var downclick = "downLoad(" + data.id + ',' + "\'" + data.designation + "\'" + ',' + "\'" + data.filePath + "\'" + ")";
+						dataHtml += '<span class="price">免费</span><del class="o-price">¥0</del>';
+						dataHtml += '<div class="buynow fr" tapmode="buyhover" onclick="' + downclick + '">立即下载</div>';
+					} else {
+						//var payclick = "Purbuy(" + data.id + ',' + "\'" + data.data_price + "\'" + ")";
+						dataHtml += '<span class="price">' + data.data_price + '</span><del class="o-price">¥' + data.data_price + '</del>';
+						/*
+						 dataHtml += '<div class="buynow fr" tapmode="buyhover" onclick="'+ payclick +'">立即购买</div>';
+						 */
+					}
+					dataHtml += '</div>'
+					dataHtml += '<div class="brief inwrap hightitem"><div class="title">' + data.designation + '</div><div class="h2"></div><div class="describe">数据类型：' + (data.data_type == 11 ? data.data_type_subName : data.data_typeName) + '</div><div class="h2"></div>';
+					if (data.data_scale == '' || data.unit == '' || data.data_scale == null || data.unit == null) {
+						dataHtml += '<div class="describe">数据规模：未知</div>';
+					} else {
+						dataHtml += '<div class="describe">数据规模：' + data.data_scale + data.unit + '</div>';
+					}
+					dataHtml += '<div class="h2"></div><div class="describe">发布时间：' + data.addtime + '</div></div>';
+					dataHtml += '<div class="darktitle inwrap">数据产品介绍</div><div class="shopinfo inwrap hightitem">' + data.data_introduce + '</div>';
+					$("#datails").html(dataHtml);
+					getList();
+				}
+			})
+		}
+
+		//获取小伙伴列表
+		function getList() {
+			var getListUrl = ajaxAgent.serverAction + '/app/channelData/recList';
+			getListUrl += '?currentPage=' + page + '&pageSize=10&rdnum=' + Math.random();
+			api.ajax({
+				async : false,
+				url : getListUrl,
+				method : 'post',
+				timeout : 50,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						catId : api.pageParam.catId,
+						artId : api.pageParam.articleId
+					}
+				}
+			}, function(ret, err) {
+				if (ret.rec_list) {
+					if ((ret.rec_list.length == 0) && (page == 1)) {
+						$(".listDataBox").html('<p style="text-align: center;">暂无数据！</p>');
+						return false;
+					}
+					var listdataHtml = '';
+					$.each(ret.rec_list, function(i, val) {
+						listdataHtml += '<li><div class="hotImageBox fl"> <img src="' + val.pic + '" /></div><div class="hotWordBox"><div class="hotwordH2" onclick="showdata(' + val.id + ')">' + val.title + '</div><em></em>';
+						if (val.is_free == 1) {
+							listdataHtml += '<div class="fl"><span>免费</span></div>';
+						} else {
+							listdataHtml += '<div class="fl"><span>¥</span><i>' + val.price + '元</i></div>';
+						}
+						listdataHtml += '<div class="fr fontSize14"><span>浏览：' + val.view_count + '</span></div></div></li>';
+					});
+					if (page == 1) {
+						$(".listDataBox").html(listdataHtml);
+					} else {
+						$(".listDataBox").append(listdataHtml);
+					}
+				}
+			});
+		}
+
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function() {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+
+		//获取数据详情
+		function showdata(Id) {
+			if (sessionAgent.isLogin()){
+				api.openWin({
+					name : 'commonHomedDataDdetalil'+Id,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : 'dataDetalil'+Id,
+						bannerTitle : '热门数据',
+						bannerUrl : 'frm_dataDetalil.html',
+						articleId : Id
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		}
+
+		//下载数据
+		function downLoad(Id, Title, Path) {
+			var userEntity = sessionAgent.getLoginInfo();
+			var userId = userEntity.userId;
+			if (userId == '' || userId == null || !userId) {
+				api.toast({
+					msg : '您需要登录才能下载！',
+					duration : 1000,
+					location : 'middle'
+				});
+				return false;
+			}
+			api.addEventListener({
+				name : 'offline'
+			}, function(ret, err) {
+				api.toast({
+					msg : '您当前处于离线状态不能下载！',
+					duration : 1000,
+					location : 'middle'
+				});
+				return false;
+			});
+			var downUrl = ajaxAgent.serverAction + '/download?fileName=' + Path + '&infoId=' + Id;
+			var tmp = Path.indexOf(".");
+			var savepath = (Path.substr(tmp));
+			api.download({
+				url : downUrl,
+				savePath : 'fs://' + Title + savepath,
+				report : true,
+				cache : true,
+				allowResume : true
+			}, function(ret, err) {
+				if (ret.state == 1) {
+					api.alert({
+						title : '下载提示信息!',
+						msg : '下载成功！下载路径：' + ret.savePath
+					});
+				} else {
+					api.alert({
+						msg : err.msg
+					});
+				}
+			});
+		}
+	</script>
+</html>

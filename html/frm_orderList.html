@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>频道列表接单列表</title>
+		<link rel="stylesheet" type="text/css"  href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css"  href="../css/style.css"  />
+		<style type="text/css">
+			.ordersBox {
+				width: 100%;
+			}
+			.ordersBox li {
+				background: #fff;
+				border-bottom: solid 1px #e5e5e5;
+				padding: 10px 15px;
+				margin-bottom: 10px;
+			}
+			.ordersBox li a {
+				color: #666;
+				width: 100%
+			}
+			.ordersBox li h1 {
+				font-size: 17px;
+				font-weight: normal;
+			}
+			.money {
+				color: #EC971F;
+				font-size: 16px;
+				margin-right: 10px;
+			}
+			.size {
+				font-size: 14px;
+			}
+			.look {
+				border: solid 1px #ccc;
+				padding: 3px 10px;
+				border-radius: 5px;
+			}
+			.ordersBox li a span {
+				margin-top: 10px;
+			}
+		</style>
+		<link id="nightLink" rel="stylesheet" href="">
+	</head>
+	<body>
+		<ul class="ordersBox" id="ordersBox"></ul>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/jquery.min.js" ></script>
+	<script type="text/javascript" src="../script/funcTools.js" ></script>
+	<script type="text/javascript" src="../script/sessions.js"></script>
+	<script type="text/javascript">
+		var page = 1;
+		apiready = function() {
+			render();
+			setRefreshHeader();
+			api.addEventListener({
+				name : 'scrolltobottom'
+			}, function(ret, err) {
+				page++;
+				render();
+				api.parseTapmode();
+			});
+		}
+		function render() {
+			api.showProgress();
+			getSosList();
+			api.parseTapmode();
+			api.hideProgress();
+		}
+
+		//获取我要接单列表
+		function getSosList() {
+			var getSosUrl = ajaxAgent.serverAction + '/app/channelData/sosList';
+			getSosUrl += '?currentPage=' + page + '&pageSize=10&rdnum=' + Math.random();
+			api.ajax({
+				url : getSosUrl,
+				method : 'post',
+				timeout : 30,
+				dataType : 'json',
+				returnAll : false,
+				data : {
+					values : {
+						catId : api.pageParam.catId,
+						catName : api.pageParam.catName
+					}
+				}
+			}, function(ret, err) {
+				if (ret.sos_list) {
+					if ((ret.sos_list.length == 0) && (page == 1)) {
+						$("#ordersBox").html('<p style="text-align: center;">暂无数据！</p>');
+						return false;
+					}
+					var listOrderHtml = '';
+					$.each(ret.sos_list, function(i, val) {
+						listOrderHtml += '<li><a href="#"><h1>' + val.title + '</h1><span class="money">￥' + val.price + '</span><span class="size">' + val.scale + val.unit + '</span><span class="look fr" onclick="showdata(' + val.id + ')">查看详情</span></a></li>';
+					});
+					if (page == 1) {
+						$("#ordersBox").html(listOrderHtml);
+					} else {
+						$("#ordersBox").append(listOrderHtml);
+					}
+				}
+			});
+		}
+
+		//头部刷新
+		function setRefreshHeader() {
+			api.setRefreshHeaderInfo({
+				visible : true,
+				bgColor : '#ccc',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...',
+				showTime : true
+			}, function() {
+				render();
+				api.refreshHeaderLoadDone();
+			});
+		}
+
+		//获得接单详情
+		function showdata(Id) {
+			if (sessionAgent.isLogin()){
+				api.openWin({
+					name : 'commonHomeOrderDdetalil'+Id,
+					url : 'win_commonHomeTitle.html',
+					pageParam : {
+						bannerName : 'orderDetal'+Id,
+						bannerTitle : '我要接单',
+						bannerUrl : 'frm_orderDetalil.html',
+						artId : Id
+					},
+					bounces : false,
+					vScrollBarEnabled : false,
+					hScrollBarEnabled : false,
+					reload : true
+				});
+			}
+		}
+	</script>
+</html>
